@@ -1,0 +1,26 @@
+version: "3.7"
+
+services:
+  elasticsearch:
+    image: "elasticsearch:7.14.2"
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+    ports:
+      - "9200:9200"
+    environment:
+      - discovery.type=single-node
+
+  mod-random-web:
+    build: "./mod-random-web/"
+    restart: unless-stopped
+    depends_on: 
+      - elasticsearch
+    ports:
+      - "5000:5000/tcp"
+
+networks:
+  default:
+    external:
+      name: cer_p1
